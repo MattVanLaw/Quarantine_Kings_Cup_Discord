@@ -80,8 +80,8 @@ module.exports = (bot) => {
     if (message === '!help') {
       const reply = [
         'Meta commands:',
-        'Type `!startKings` to start a game',
-        'Type `!restartKings` to start a new game',
+        'Type `!startKings` to start a game. Add `-tts` for text to speach.',
+        'Type `!restartKings` to start a new game. Add `-tts` for text to speach.',
         'Type `!kingsCardList` to see cards and rules',
       ].join('\n');
 

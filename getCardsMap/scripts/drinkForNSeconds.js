@@ -1,4 +1,4 @@
-module.exports = (time) => {
+module.exports = (time, shouldTTS) => {
   let i = 0;
 
   return (bot, channelId) => {
@@ -17,6 +17,6 @@ module.exports = (time) => {
           clearInterval(interval);
         }
       }, 1000);
-    }, 5000);
+    }, shouldTTS ? 5000 : 1000);
   };
 };

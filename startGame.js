@@ -46,6 +46,7 @@ module.exports = (bot) => {
 
       cardsMap = getCardsMap({
         waterfallTime: 5,
+        shouldTTS,
       });
 
       bot.sendMessage({
@@ -119,7 +120,7 @@ module.exports = (bot) => {
     }
 
     if (message === '!kingsCardList -verbose') {
-      const cardsMap = require('./getCardsMap')({waterfallTime: 5});
+      const cardsMap = require('./getCardsMap')({waterfallTime: 5, shouldTTS});
 
       const reply = Object.keys(cardsMap)
         .map((card) => {

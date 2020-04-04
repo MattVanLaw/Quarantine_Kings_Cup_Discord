@@ -26,9 +26,13 @@ const cardOrder = {
   'K': 12,
 };
 
+let shouldTTS = false;
+
 module.exports = (bot) => {
   bot.on('message', (user, userId, channelId, message, event) => {
-    if (message === '!startKings') {
+    if (message === '!startKings' || message === '!startKings -tts') {
+      shouldTTS = message.includes('-tts');
+
       if (dumbGlobalStartVariable) {
         bot.sendMessage({
           to: channelId,
@@ -62,7 +66,13 @@ module.exports = (bot) => {
         return;
       }
 
-      pickCard(bot, localCardsCopy, cardsMap, channelId);
+      pickCard(
+        bot,
+        localCardsCopy,
+        cardsMap,
+        channelId,
+        shouldTTS
+      );
     }
   });
 
@@ -133,11 +143,14 @@ module.exports = (bot) => {
   });
 
   bot.on('message', (user, userId, channelId, message, event) => {
-    if (message === '!restartKings') {
+    if (message === '!restartKings' || message === '!restartKings -tts') {
+      shouldTTS = message.includes('-tts');
+
       if (!dumbGlobalStartVariable) {
         bot.sendMessage({
           to: channelId,
           message: 'Game not started, type `!startKings`',
+          tts: shouldTTS,
         });
 
         return;
@@ -148,6 +161,7 @@ module.exports = (bot) => {
       bot.sendMessage({
         to: channelId,
         message: 'Started a new game of Kings Cup. ~!Huzzah!~',
+        tts: shouldTTS,
       });
     }
   });

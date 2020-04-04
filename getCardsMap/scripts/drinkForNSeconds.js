@@ -2,6 +2,9 @@ module.exports = (time) => {
   let i = 0;
 
   return (bot, channelId) => {
+    // ! give five seconds before counting
+    setTimeout(() => null, 5000);
+
     const interval = setInterval(() => {
       i += 1;
 

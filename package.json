@@ -1,0 +1,17 @@
+{
+  "name": "kings-cup-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon bot"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "discord.io": "https://github.com/woor/discord.io/tarball/gateway_v6",
+    "lodash": "^4.17.15",
+    "nodemon": "^2.0.2",
+    "winston": "^3.2.1"
+  }
+}

@@ -51,6 +51,7 @@ module.exports = (bot) => {
       bot.sendMessage({
         to: channelId,
         message: 'Kings Cup, Begin!',
+        tts: shouldTTS,
       });
     }
   });
@@ -156,7 +157,7 @@ module.exports = (bot) => {
         return;
       }
 
-      localCardsCopy = cards;
+      localCardsCopy = _.cloneDeep(cards);
 
       bot.sendMessage({
         to: channelId,

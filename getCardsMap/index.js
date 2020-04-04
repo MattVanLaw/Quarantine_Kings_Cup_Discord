@@ -4,55 +4,55 @@ module.exports = ({
   waterFallTime,
 }) => ({
   'A': {
-    gameType: 'Waterfall',
+    gameType: `Get ready to chug down a WATERFALL for \`${ waterFallTime }\` seconds!`,
     gameScript: drinkForNSeconds(waterFallTime),
   },
   '2': {
-    gameType: null,
-    gameScript: () => null,
+    gameType: 'Haiku. Best 5-7-5 haiku gets to pick another card.',
+    gameScript: null,
   },
   '3': {
-    gameType: null,
-    gameScript: () => null,
+    gameType: 'Three is me. You take two drinks.',
+    gameScript: null,
   },
   '4': {
-    gameType: null,
-    gameScript: () => null,
+    gameType: 'Four is lore: each person writes a line of lore to a new story! The player who phones it in drinks!',
+    gameScript: null,
   },
   '5': {
-    gameType: null,
-    gameScript: () => null,
+    gameType: 'Five is guys. Drink it up dudes!',
+    gameScript: null,
   },
   '6': {
-    gameType: null,
-    gameScript: () => null,
+    gameType: 'Six is chicks. Drink it up ladddies!',
+    gameScript: null,
   },
   '7': {
-    gameType: null,
-    gameScript: () => null,
+    gameType: 'Move the thief: ask another player if they have an interesting resource nearby. If they do: they drink. If they don\'t: you drink',
+    gameScript: null,
   },
   '8': {
-    gameType: null,
-    gameScript: () => null,
+    gameType: 'Mate: Find a drinking buddy. They drink anytime you do.',
+    gameScript: null,
   },
   '9': {
-    gameType: null,
-    gameScript: () => null,
+    gameType: 'Fine. Everyone other than you "pays the fine", meaning they drink.',
+    gameScript: null,
   },
   '10': {
-    gameType: null,
-    gameScript: () => null,
+    gameType: 'Category. You pick a category. First to blank on something in that category drinks.',
+    gameScript: null,
   },
   'J': {
-    gameType: null,
-    gameScript: () => null,
+    gameType: 'Jinx. You\'re now the Jinx, so whenever you jinx someone they drink!',
+    gameScript: null,
   },
   'Q': {
-    gameType: null,
-    gameScript: () => null,
+    gameType: 'Comrade Questions: Ask questions; those who answer will drink.',
+    gameScript: null,
   },
   'K': {
-    gameType: null,
-    gameScript: () => null,
+    gameType: 'As King, declare a rule for the game.',
+    gameScript: null,
   },
 });

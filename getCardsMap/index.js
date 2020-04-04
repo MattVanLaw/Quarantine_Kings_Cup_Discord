@@ -1,11 +1,11 @@
 const drinkForNSeconds = require('./scripts/drinkForNSeconds');
 
 module.exports = ({
-  waterFallTime,
+  waterfallTime,
 }) => ({
   'A': {
-    gameType: `Get ready to chug down a WATERFALL for \`${ waterFallTime }\` seconds!`,
-    gameScript: drinkForNSeconds(waterFallTime),
+    gameType: `Get ready to chug down a WATERFALL for \`${ waterfallTime }\` seconds!`,
+    gameScript: drinkForNSeconds(waterfallTime),
   },
   '2': {
     gameType: 'Haiku. Best 5-7-5 haiku gets to pick another card.',

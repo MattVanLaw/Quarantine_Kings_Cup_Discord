@@ -45,7 +45,7 @@ module.exports = (bot) => {
       dumbGlobalStartVariable = true;
 
       cardsMap = getCardsMap({
-        waterFallTime: 5,
+        waterfallTime: 5,
       });
 
       bot.sendMessage({
@@ -117,7 +117,7 @@ module.exports = (bot) => {
     }
 
     if (message === '!kingsCardList -verbose') {
-      const cardsMap = require('./getCardsMap')({ waterFallTime: 5 })
+      const cardsMap = require('./getCardsMap')({waterfallTime: 5});
 
       const reply = Object.keys(cardsMap)
         .map((card) => {

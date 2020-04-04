@@ -12,11 +12,13 @@ module.exports = (bot, cards, cardsMap, channelId) => {
 
   bot.sendMessage({
     to: channelId,
-    message: `\nYou flipped over a '${ card }'.`
-      + `\nStarting ${gameType}.`
-      + `\nCards left: ${ cards.length }.`,
+    message: [
+      `You flipped over a \`${ card }\`.`,
+      `**${gameType}**`,
+      `Cards left: \`${ cards.length }\``,
+    ].join('\n\n'),
   });
 
-  gameScript(bot, channelId);
+  if (gameScript) gameScript(bot, channelId);
 };
 

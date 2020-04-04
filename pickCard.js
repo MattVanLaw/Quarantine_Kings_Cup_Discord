@@ -13,7 +13,6 @@ module.exports = (bot, cards, cardsMap, channelId, shouldTTS) => {
   const reply = [
     `You flipped over a \`${card}\`.`,
     `**${gameType}**`,
-    `Cards left: \`${cards.length}\``,
   ].join('\n\n');
 
   bot.sendMessage({
@@ -21,6 +20,13 @@ module.exports = (bot, cards, cardsMap, channelId, shouldTTS) => {
     message: reply,
     tts: shouldTTS,
   });
+
+  setTimeout(() => {
+    bot.sendMessage({
+      to: channelId,
+      message: `Cards left: \`${cards.length}\``,
+    });
+  }, 500);
 
   if (gameScript) gameScript(bot, channelId);
 };

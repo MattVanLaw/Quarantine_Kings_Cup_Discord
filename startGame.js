@@ -83,6 +83,7 @@ module.exports = (bot) => {
         'Meta commands:',
         'Type `!startKings` to start a game. Add `-tts` for text to speach.',
         'Type `!restartKings` to start a new game. Add `-tts` for text to speach.',
+        'Type `!stopKings` to stop a game in session',
         'Type `!kingsCardList` to see cards and rules',
       ].join('\n');
 
@@ -144,6 +145,16 @@ module.exports = (bot) => {
   });
 
   bot.on('message', (user, userId, channelId, message, event) => {
+    if (message === '!stopKings' && dumbGlobalStartVariable) {
+      localCardsCopy = _.cloneDeep(cards);
+      dumbGlobalStartVariable = false;
+      bot.sendMessage({
+        to: channelId,
+        message: 'Kings Cup Game Ended',
+        tts: shouldTTS,
+      });
+    }
+
     if (message === '!restartKings' || message === '!restartKings -tts') {
       shouldTTS = message.includes('-tts');
 

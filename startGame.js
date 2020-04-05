@@ -23,6 +23,16 @@ const gamesInSession = {};
 module.exports = (bot) => {
   bot.on('message', (user, userId, channelId, message, event) => {
     const game = gamesInSession[channelId];
+
+    if (message === '!kingsStatus') {
+      const reply = 'Running: ' + Boolean(game);
+
+      bot.sendMessage({
+        to: channelId,
+        message: reply,
+      });
+    }
+
     console.log('games in session: ', Object.keys(gamesInSession));
 
     if (message === '!startKings' || message === '!startKings -tts') {
@@ -31,15 +41,56 @@ module.exports = (bot) => {
       if (game) {
         bot.sendMessage({
           to: channelId,
-          message: 'Game already started.',
+          message: 'Game already running in channel.',
         });
       } else {
-        gamesInSession[channelId] = new Game({
+        const newGame = new Game({
           bot,
           channelId,
           shouldTTS,
+          gameMasterId: userId,
           // waterfallTime: 5,
         });
+
+        gamesInSession[channelId] = newGame;
+      }
+    }
+
+    if (/^!joinKings/.test(message)) {
+      if (game) {
+        const nickname = message.slice(11);
+  
+        game.join(userId, nickname);
+      }
+    }
+
+    if (/^!kingsPlayers/.test(message)) {
+      if (!game) {
+        bot.sendMessage({
+          to: channelId,
+          message: 'No game started on channel. Use command `!startKings` to begin!',
+          tts: shouldTTS,
+        });
+      }
+
+      bot.sendMessage({
+        to: channelId,
+        message: game.getPlayers(),
+        tts: shouldTTS,
+      });
+    }
+
+    if (message === '!quitKings') {
+      const status = game.quit(userId);
+
+      if (status === 'End Game') {
+        bot.sendMessage({
+          to: channelId,
+          message: 'Kings Cup game is now empty. Game has ended',
+          tts: shouldTTS,
+        });
+
+        delete gamesInSession[channelId];
       }
     }
 
@@ -53,7 +104,7 @@ module.exports = (bot) => {
           tts: shouldTTS,
         });
       } else {
-        game.restart(shouldTTS);
+        game.restart(userId, shouldTTS);
       }
     }
 
@@ -64,14 +115,14 @@ module.exports = (bot) => {
           message: 'Game not started, type `!startKings`',
         });
       } else {
-        game.pickCard();
+        game.pickCard(userId);
       }
     }
 
     if (message === '!stopKings' && game) {
-      game.stop();
+      const shouldStop = game.stop(userId);
 
-      delete gamesInSession[channelId];
+      if (shouldStop) delete gamesInSession[channelId];
     }
   });
 

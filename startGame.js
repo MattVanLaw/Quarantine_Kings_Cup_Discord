@@ -1,14 +1,6 @@
-const _ = require('lodash');
-
-const getCardsMap = require('./getCardsMap');
-const pickCard = require('./pickCard');
-const cards = require('./cards');
-
-let localCardsCopy = _.cloneDeep(cards);
-
-let dumbGlobalStartVariable = false;
-
-let cardsMap = null;
+// ! MAJOR TODO
+// TODO: Abstract constants into a class, so each channel can have its own instance
+const Game = require('./Game');
 
 const cardOrder = {
   'A': 0,
@@ -26,55 +18,60 @@ const cardOrder = {
   'K': 12,
 };
 
-let shouldTTS = false;
+const gamesInSession = {};
 
 module.exports = (bot) => {
   bot.on('message', (user, userId, channelId, message, event) => {
+    const game = gamesInSession[channelId];
+    console.log('games in session: ', Object.keys(gamesInSession));
+
     if (message === '!startKings' || message === '!startKings -tts') {
       shouldTTS = message.includes('-tts');
 
-      if (dumbGlobalStartVariable) {
+      if (game) {
         bot.sendMessage({
           to: channelId,
           message: 'Game already started.',
         });
-
-        return;
+      } else {
+        gamesInSession[channelId] = new Game({
+          bot,
+          channelId,
+          shouldTTS,
+          // waterfallTime: 5,
+        });
       }
-
-      dumbGlobalStartVariable = true;
-
-      cardsMap = getCardsMap({
-        waterfallTime: 5,
-        shouldTTS,
-      });
-
-      bot.sendMessage({
-        to: channelId,
-        message: 'Kings Cup, Begin!',
-        tts: shouldTTS,
-      });
     }
-  });
 
-  bot.on('message', (user, userId, channelId, message, event) => {
+    if (message === '!restartKings' || message === '!restartKings -tts') {
+      shouldTTS = message.includes('-tts');
+
+      if (!game) {
+        bot.sendMessage({
+          to: channelId,
+          message: 'Game not started, type `!startKings`',
+          tts: shouldTTS,
+        });
+      } else {
+        game.restart(shouldTTS);
+      }
+    }
+
     if (message === '!pickCard') {
-      if (!dumbGlobalStartVariable) {
+      if (!game) {
         bot.sendMessage({
           to: channelId,
           message: 'Game not started, type `!startKings`',
         });
-
-        return;
+      } else {
+        game.pickCard();
       }
+    }
 
-      pickCard(
-        bot,
-        localCardsCopy,
-        cardsMap,
-        channelId,
-        shouldTTS
-      );
+    if (message === '!stopKings' && game) {
+      game.stop();
+
+      delete gamesInSession[channelId];
     }
   });
 
@@ -141,40 +138,6 @@ module.exports = (bot) => {
       bot.sendMessage({
         to: channelId,
         message: 'Verbose descriptions...\n' + reply,
-      });
-    }
-  });
-
-  bot.on('message', (user, userId, channelId, message, event) => {
-    if (message === '!stopKings' && dumbGlobalStartVariable) {
-      localCardsCopy = _.cloneDeep(cards);
-      dumbGlobalStartVariable = false;
-      bot.sendMessage({
-        to: channelId,
-        message: 'Kings Cup Game Ended',
-        tts: shouldTTS,
-      });
-    }
-
-    if (message === '!restartKings' || message === '!restartKings -tts') {
-      shouldTTS = message.includes('-tts');
-
-      if (!dumbGlobalStartVariable) {
-        bot.sendMessage({
-          to: channelId,
-          message: 'Game not started, type `!startKings`',
-          tts: shouldTTS,
-        });
-
-        return;
-      }
-
-      localCardsCopy = _.cloneDeep(cards);
-
-      bot.sendMessage({
-        to: channelId,
-        message: 'Started a new game of Kings Cup. ~!Huzzah!~',
-        tts: shouldTTS,
       });
     }
   });

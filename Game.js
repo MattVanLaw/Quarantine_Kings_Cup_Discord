@@ -1,4 +1,5 @@
 // TODO: Grab actual username.
+// TODO: Move logic into User class
 
 /* eslint-disable require-jsdoc */
 const _ = require('lodash');

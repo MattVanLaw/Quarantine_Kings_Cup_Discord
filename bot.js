@@ -2,7 +2,7 @@ const Discord = require('discord.io');
 const logger = require('winston');
 
 const auth = require('./auth.json');
-const startGame = require('./startGame');
+const gameListeners = require('./gameListeners');
 
 // Configure logger settings
 logger.remove(logger.transports.Console);
@@ -24,4 +24,13 @@ bot.on('ready', function(evt) {
   logger.info(bot.username + ' - (' + bot.id + ')');
 });
 
-startGame(bot);
+bot.on('message', (user, userId, channelId, message, event) => {
+  if (message.includes('OTL')) {
+    bot.sendMessage({
+      to: channelId,
+      message: `Cheer up, ${user}! How about some King's Cup to brighten your day? Just type \`!startKings\``,
+    });
+  }
+});
+
+gameListeners(bot, logger);

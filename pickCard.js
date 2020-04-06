@@ -1,4 +1,4 @@
-module.exports = (bot, cards, cardsMap, channelId, shouldTTS) => {
+module.exports = (bot, cards, cardsMap, channelId, shouldTTS, username) => {
   const cardIndex = Math.floor(Math.random() * cards.length);
 
   const card = cards[cardIndex];
@@ -11,7 +11,7 @@ module.exports = (bot, cards, cardsMap, channelId, shouldTTS) => {
   } = cardsMap[card];
 
   const reply = [
-    `You flipped over a \`${card}\`.`,
+    `\`${username}\` flipped over a \`${card}\`.`,
     `**${gameType}**`,
   ].join('\n\n');
 
@@ -20,13 +20,6 @@ module.exports = (bot, cards, cardsMap, channelId, shouldTTS) => {
     message: reply,
     tts: shouldTTS,
   });
-
-  setTimeout(() => {
-    bot.sendMessage({
-      to: channelId,
-      message: `Cards left: \`${cards.length}\``,
-    });
-  }, 500);
 
   if (gameScript) gameScript(bot, channelId);
 };

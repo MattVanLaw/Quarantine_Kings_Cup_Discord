@@ -15,6 +15,7 @@ class Game {
     shouldTTS = false,
     waterfallTime = 5,
     gameMasterId,
+    username,
   }) {
     this.masterCards = cards;
     this.channelId = channelId;
@@ -29,19 +30,25 @@ class Game {
 
     this.players = [{
       id: gameMasterId,
-      nickname: 'Game Master',
+      username,
+      nickname: username,
       gm: true,
     }];
 
     bot.sendMessage({
       to: channelId,
-      message: 'Kings Cup, Begin!',
+      message: 'Kings Cup, Begin! Type `!draw` to start.',
       tts: shouldTTS,
     });
   }
 
-  pickCard(playerId) {
-    const shouldJoin = this.shouldJoinGame(playerId);
+  getStatus() {
+    return 'Cards Left: ' + `\`${this.localCards.length}\`\n`
+      + `Active Players: ` + this.getPlayers();
+  }
+
+  pickCard(playerId, username) {
+    const shouldJoin = this.shouldJoinGame(playerId, username);
 
     if (shouldJoin) return;
 
@@ -53,7 +60,8 @@ class Game {
         this.localCards,
         this.cardsMap,
         this.channelId,
-        this.shouldTTS
+        this.shouldTTS,
+        username
       );
       const playerThatPicked = this.players.shift();
 
@@ -64,7 +72,7 @@ class Game {
       this.bot.sendMessage({
         to: this.channelId,
         message: `It's not your turn, ${ nickname }. `
-          + `${ this.players[0].nickname }, it's your turn in Quarant-King's.`,
+          + `<@${ this.players[0].id }>, it's your turn in Quarant-King's.`,
         tts: this.shouldTTS,
       });
     }
@@ -73,7 +81,7 @@ class Game {
   stop(playerId) {
     const player = this.findPlayer(playerId);
 
-    if (!player.gm) return false;
+    if (!player || !player.gm) return false;
 
     // ! don't rely on other file deleting instance
     this.localCards = this.cards;
@@ -117,7 +125,9 @@ class Game {
     player.nickname = nickname;
   }
 
-  join(playerId, nickname) {
+  join(playerId, username, nickname) {
+    nickname = nickname || username;
+
     const isPlaying = this.findPlayer(playerId);
 
     if (isPlaying) {
@@ -130,26 +140,17 @@ class Game {
       return;
     }
 
-    if (!nickname) {
-      this.bot.sendMessage({
-        to: this.channelId,
-        message: 'Nickname is required to join game.',
-      });
-
-      return;
-    }
-
     if (nickname === 'Game Master') {
       this.bot.sendMessage({
         to: this.channelId,
-        message: 'Only the game\'s creator can be the Game Master!',
+        message: 'Only the game\'s creator can named Game Master!',
         tts: this.shouldTTS,
       });
 
       return;
     }
 
-    if (!this.isNewNickname(nickname)) {
+    if (nickname && !this.isNewNickname(nickname)) {
       this.bot.sendMessage({
         to: this.channelId,
         message: 'This nickname is already taken.',
@@ -161,6 +162,7 @@ class Game {
 
     this.players.push({
       id: playerId,
+      username,
       nickname,
     });
 
@@ -172,7 +174,15 @@ class Game {
   }
 
   quit(playerId) {
-    if (this.players.length === 1) return 'End Game';
+    if (this.players.length === 1) {
+      this.bot.sendMessage({
+        to: this.channelId,
+        message: 'Kings Cup game is now empty. Game has ended',
+        tts: this.shouldTTS,
+      });
+
+      return 'End Game';
+    }
 
     const playerIdx = this.players
       .findIndex(({id}) => id === playerId);
@@ -202,14 +212,14 @@ class Game {
     }
   }
 
-  shouldJoinGame(playerId) {
+  shouldJoinGame(playerId, username) {
     const isPlaying = this.findPlayer(playerId);
 
     if (!isPlaying) {
       this.bot.sendMessage({
         to: this.channelId,
-        message: 'You are not currently in this game. '
-         + 'Join the party with `!joinKings`. ',
+        message: username + ', you are not currently in this game. '
+         + 'Join the party with `!kingsJoin`. ',
         tts: this.shouldTTS,
       });
     }
@@ -219,8 +229,8 @@ class Game {
 
   getPlayers() {
     return this.players
-      .map(({nickname, gm}, idx) => {
-        return idx + 1
+      .map(({ nickname, gm }, idx) => {
+        return String(idx + 1)
           + ': '
           + nickname
           + (gm ? ' - Game Master' : '');
@@ -232,9 +242,9 @@ class Game {
       .find(({id}) => id === playerId);
   }
 
-  isNewNickname(nicknameInQuestion) {
+  isNewNickname(newNickname) {
     return !this.players
-      .find(({nickname}) => nickname.toLowerCase() === nicknameInQuestion.toLowerCase());
+      .find(({nickname}) => nickname.toLowerCase() === newNickname.toLowerCase());
   }
 }
 

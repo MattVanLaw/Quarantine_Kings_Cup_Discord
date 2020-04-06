@@ -1,5 +1,7 @@
-// ! MAJOR TODO
-// TODO: Abstract constants into a class, so each channel can have its own instance
+// ! MAJOR TODOs
+// TODO 1: lock if(game) logic into abstracted file,
+// * and have shadow versions of listeners, if game is NOT on.
+
 const Game = require('./Game');
 
 const cardOrder = {
@@ -31,6 +33,13 @@ module.exports = (bot) => {
         to: channelId,
         message: reply,
       });
+    }
+
+    if (/^!changeName/.test(message)) {
+      if (game) {
+        const nickname = message.slice(11);
+        game.changeName(userId, nickname);
+      }
     }
 
     console.log('games in session: ', Object.keys(gamesInSession));

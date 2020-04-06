@@ -106,6 +106,16 @@ class Game {
     });
   }
 
+  changeName(playerId, nickname) {
+    const shouldJoin = this.shouldJoinGame(playerId);
+
+    if (shouldJoin) return;
+
+    const player = this.findPlayer(playerId);
+
+    player.nickname = nickname;
+  }
+
   join(playerId, nickname) {
     const isPlaying = this.findPlayer(playerId);
 
@@ -208,7 +218,12 @@ class Game {
 
   getPlayers() {
     return this.players
-      .map(({nickname}, idx) => idx + 1 + ': ' + nickname).join(', ');
+      .map(({nickname, gm}, idx) => {
+        return idx + 1
+          + ': '
+          + nickname
+          + (gm ? ' - Game Master' : '');
+      }).join(', ');
   }
 
   findPlayer(playerId) {

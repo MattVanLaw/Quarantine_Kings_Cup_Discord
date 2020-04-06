@@ -28,7 +28,7 @@ bot.on('message', (user, userId, channelId, message, event) => {
   if (message.includes('OTL')) {
     bot.sendMessage({
       to: channelId,
-      message: `Cheer up, ${user}! How about some King's Cup to brighten your day? Just type \`!startKings\``,
+      message: `Cheer up, ${user}! How about some King's Cup to brighten your day? Just type \`!kingsStart\``,
     });
   }
 });

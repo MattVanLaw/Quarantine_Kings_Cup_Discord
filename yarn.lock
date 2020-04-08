@@ -584,6 +584,11 @@ normalize-path@^3.0.0, normalize-path@~3.0.0:
   resolved "https://registry.yarnpkg.com/normalize-path/-/normalize-path-3.0.0.tgz#0dcd69ff23a1c9b11fd0978316644a0388216a65"
   integrity sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==
 
+normalize-strings@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/normalize-strings/-/normalize-strings-1.1.0.tgz#b24a75ed48176394404f74649b5cb8040e899a75"
+  integrity sha1-skp17UgXY5RAT3Rkm1y4BA6JmnU=
+
 npm-run-path@^2.0.0:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/npm-run-path/-/npm-run-path-2.0.2.tgz#35a9232dfa35d7067b4cb2ddf2357b1871536c5f"
@@ -635,6 +640,11 @@ pify@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/pify/-/pify-3.0.0.tgz#e5a4acd2c101fdf3d9a4d07f0dbc4db49dd28176"
   integrity sha1-5aSs0sEB/fPZpNB/DbxNtJ3SgXY=
+
+pluralize@^8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/pluralize/-/pluralize-8.0.0.tgz#1a6fa16a38d12a1901e0320fa017051c539ce3b1"
+  integrity sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA==
 
 prepend-http@^1.0.1:
   version "1.0.4"
@@ -806,6 +816,14 @@ supports-color@^5.3.0, supports-color@^5.5.0:
   integrity sha512-QjVjwdXIt408MIiAqCX4oUKsgU2EqAGzs2Ppkm4aQYbjm+ZEWEcW4SfFNTr4uMNZma0ey4f5lgLrkB0aX0QMow==
   dependencies:
     has-flag "^3.0.0"
+
+syllable@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/syllable/-/syllable-4.0.1.tgz#77afcef629cb2693f68b31ec51102d6134df5a5c"
+  integrity sha512-OBjxXbamHkfJcgdG4MWfCa6vTeOsxyc1MBDkX2o+H4zr8WcHtTrBzPYKXiwtz3k/ItqMNdmgZej4EdGdmEVc6A==
+  dependencies:
+    normalize-strings "^1.1.0"
+    pluralize "^8.0.0"
 
 term-size@^1.2.0:
   version "1.2.0"

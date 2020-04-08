@@ -12,6 +12,7 @@
     "discord.io": "https://github.com/woor/discord.io/tarball/gateway_v6",
     "lodash": "^4.17.15",
     "nodemon": "^2.0.2",
+    "syllable": "^4.0.1",
     "winston": "^3.2.1"
   }
 }

@@ -104,7 +104,10 @@ class Game {
         message: 'Only the Game Master can restart the game',
         tts: this.shouldTTS,
       });
+
+      return;
     }
+
     this.localCards = this.cards;
     this.shouldTTS = shouldTTS;
 
@@ -196,7 +199,7 @@ class Game {
 
       this.bot.sendMessage({
         to: this.channelId,
-        message: player.nickname + 'has escaped quarant-king\'s',
+        message: `${player.username} has escaped quarant-king's`,
         tts: this.shouldTTS,
       });
     }
@@ -206,7 +209,7 @@ class Game {
 
       this.bot.sendMessage({
         to: this.channelId,
-        message: this.players[0].nickname + ' is now the Game Master',
+        message: this.players[0].username + ' is now the Game Master',
         tts: this.shouldTTS,
       });
     }

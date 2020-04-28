@@ -1,4 +1,5 @@
 const drinkForNSeconds = require('./scripts/drinkForNSeconds');
+const twoHaikus = require('./scripts/two-haikus');
 
 module.exports = ({
   waterfallTime,
@@ -6,11 +7,11 @@ module.exports = ({
 }) => ({
   'A': {
     gameType: `Get ready to chug down a WATERFALL for \`${ waterfallTime }\` seconds!`,
-    gameScript: drinkForNSeconds(waterfallTime, shouldTTS),
+    gameScript: drinkForNSeconds.apply(null,  [waterfallTime, shouldTTS]),
   },
   '2': {
     gameType: 'Haiku. Best 5-7-5 haiku gets to pick another card.',
-    gameScript: null,
+    gameScript: twoHaikus,
   },
   '3': {
     gameType: 'Three is me. You take two drinks.',

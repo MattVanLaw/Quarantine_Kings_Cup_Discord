@@ -1,4 +1,11 @@
-module.exports = (bot, cards, cardsMap, channelId, shouldTTS, username) => {
+module.exports = (
+  bot,
+  cards,
+  cardsMap,
+  channelId,
+  shouldTTS,
+  username,
+) => {
   const cardIndex = Math.floor(Math.random() * cards.length);
 
   const card = cards[cardIndex];
@@ -8,7 +15,7 @@ module.exports = (bot, cards, cardsMap, channelId, shouldTTS, username) => {
   const {
     gameType,
     gameScript,
-  } = cardsMap[card];
+  } = cardsMap['2']; // !
 
   const reply = [
     `\`${username}\` flipped over a \`${card}\`.`,
@@ -21,6 +28,7 @@ module.exports = (bot, cards, cardsMap, channelId, shouldTTS, username) => {
     tts: shouldTTS,
   });
 
-  if (gameScript) gameScript(bot, channelId);
+  if (gameScript) {
+    return gameScript();
+  }
 };
-

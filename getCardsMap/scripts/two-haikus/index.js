@@ -3,16 +3,14 @@ const HAIKU_PATTERN = [5, 7, 5];
 
 // ! Starts mini-game sequence.
 
-const validPlayerHaikusById = {};
+module.exports = () => ({ userId, bot, channelId, players, message, user, gameMemory }) => {
+  const validPlayerHaikusById = gameMemory.haikus || {};
 
-module.exports = () => ({ userId, bot, channelId, players, message, user }) => {
-  console.log('yo you haikus')
   const validHaikus = Object.keys(
     validPlayerHaikusById
-  ).length
+  ).length;
 
-  while (validHaikus !== players.length) {
-    console.log('haiku listening')
+  if (validHaikus !== players.length) {
     const outstandingPlayers = players
       .filter(({ id }) => !validPlayerHaikusById[id]);
 
@@ -28,6 +26,7 @@ module.exports = () => ({ userId, bot, channelId, players, message, user }) => {
     }
 
     if (message.includes('\n')) {
+      console.log('MESSAGE', message.includes('\n'));
       const lines = message.split('\n');
 
       if (lines.length !== 3) {
@@ -40,15 +39,21 @@ module.exports = () => ({ userId, bot, channelId, players, message, user }) => {
       const isValidHaiku = HAIKU_PATTERN
         .every((syllCount, lineNumber) => validSyllCount(
           lines[lineNumber],
-          syllCount,
+          syllCount
         ));
 
+      console.log('VALID?', isValidHaiku);
       // ! going to allow users to replace their haikus until game is done.
       if (isValidHaiku) {
         validPlayerHaikusById[userId] = {
           user,
           haiku: message,
-        }
+        };
+
+        bot.sendMessage({
+          to: channelId,
+          message: `Success, <@${user}>! Haiku Entered.`,
+        });
       } else {
         bot.sendMessage({
           to: channelId,
@@ -63,5 +68,8 @@ module.exports = () => ({ userId, bot, channelId, players, message, user }) => {
     }
   }
 
-  return { haikus: validPlayerHaikusById };
+  return {
+    type: 'haikus',
+    memory: validPlayerHaikusById,
+  };
 }

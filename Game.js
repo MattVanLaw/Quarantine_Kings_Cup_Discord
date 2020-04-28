@@ -35,14 +35,13 @@ class Game {
       gm: true,
     }];
 
-    this.gameMemory = {}
+    this.gameMemory = {};
 
     bot.sendMessage({
       to: channelId,
       message: 'Kings Cup, Begin! Type `!draw` to start.',
       tts: shouldTTS,
     });
-
   }
 
   getStatus() {
@@ -56,38 +55,22 @@ class Game {
 
   runMinigame(user, userId, message) {
     if (this.currentMinigame) {
-      this.bot.sendMessage({
-        to: this.channelId,
-        message: 'Starting Mini Game Instance. Good Luck!',
-      });
-
       // TODO: turn minigame into class with .play
       // when win-condition is met, persist minigame
       // results to actual game
-      const miniGameReturn = this.currentMinigame({
+      const {type, memory} = this.currentMinigame({
         bot: this.bot,
         players: this.players,
         channelId: this.channelId,
         message,
         user,
         userId,
-      })
+        gameMemory: this.gameMemory,
+      });
 
-      this.currentMinigame = null
+      this.gameMemory[type] = memory;
 
-      const type = Object.keys(miniGameReturn)[0];
-      const miniGameReturnVal = miniGameReturn[type]
-      const typeOfMemory = this.gameMemory[type]
-
-      typeOfMemory
-        ? typeOfMemory = typeOfMemory
-          .push(miniGameReturnVal)
-        : typeOfMemory = [miniGameReturnVal];
-
-      this.bot.sendMessage({
-        to: this.channelId,
-        message: `${ type } minigame completed!`
-      })
+      console.log('HEY ITS GAME STATE', this.gameMemory);
     }
   }
 
@@ -106,7 +89,7 @@ class Game {
         this.channelId,
         this.shouldTTS,
         username,
-        this.players,
+        this.players
       );
 
       if (minigame) {

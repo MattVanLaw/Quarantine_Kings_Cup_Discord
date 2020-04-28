@@ -26,6 +26,8 @@ module.exports = (bot, logger) => {
   bot.on('message', (user, userId, channelId, message, event) => {
     const game = gamesInSession[channelId];
 
+    const isInMinigame = game && game.getMinigame();
+
     logger.info(`Active Games: [${Object.keys(gamesInSession).join(', ')}]`);
 
     if (message === '!kingsStatus') {
@@ -91,6 +93,9 @@ module.exports = (bot, logger) => {
       if (message === '!kingsRestart' || message === '!kingsRestart -tts') {
         const shouldTTS = message.includes('-tts');
         game.restart(userId, shouldTTS);
+      }
+      if (isInMinigame) {
+        game.runMinigame(user, userId, message);
       }
 
       if (message === '!draw') game.pickCard(userId, user);

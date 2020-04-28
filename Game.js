@@ -35,16 +35,60 @@ class Game {
       gm: true,
     }];
 
+    this.gameMemory = {}
+
     bot.sendMessage({
       to: channelId,
       message: 'Kings Cup, Begin! Type `!draw` to start.',
       tts: shouldTTS,
     });
+
   }
 
   getStatus() {
     return 'Cards Left: ' + `\`${this.localCards.length}\`\n`
       + `Active Players: ` + this.getPlayers();
+  }
+
+  getMinigame() {
+    return this.currentMinigame;
+  }
+
+  runMinigame(user, userId, message) {
+    if (this.currentMinigame) {
+      this.bot.sendMessage({
+        to: this.channelId,
+        message: 'Starting Mini Game Instance. Good Luck!',
+      });
+
+      // TODO: turn minigame into class with .play
+      // when win-condition is met, persist minigame
+      // results to actual game
+      const miniGameReturn = this.currentMinigame({
+        bot: this.bot,
+        players: this.players,
+        channelId: this.channelId,
+        message,
+        user,
+        userId,
+      })
+
+      this.currentMinigame = null
+
+      const type = Object.keys(miniGameReturn)[0];
+      const miniGameReturnVal = miniGameReturn[type]
+      const typeOfMemory = this.gameMemory[type]
+
+      typeOfMemory
+        ? typeOfMemory = typeOfMemory
+          .push(miniGameReturnVal)
+        : typeOfMemory = [miniGameReturnVal];
+
+      this.bot.sendMessage({
+        to: this.channelId,
+        message: `${ type } minigame completed!`
+      })
+    }
   }
 
   pickCard(playerId, username) {
@@ -55,14 +99,20 @@ class Game {
     const isYourTurn = this.players[0].id === playerId;
 
     if (isYourTurn) {
-      pickCard(
+      const minigame = pickCard(
         this.bot,
         this.localCards,
         this.cardsMap,
         this.channelId,
         this.shouldTTS,
-        username
+        username,
+        this.players,
       );
+
+      if (minigame) {
+        this.currentMinigame = minigame;
+      }
+
       const playerThatPicked = this.players.shift();
 
       this.players.push(playerThatPicked);
